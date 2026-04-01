@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  nexapay-postgres:
+    image: pgvector/pgvector:pg16
+    container_name: nexapay_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: nexapay_db
+      POSTGRES_USER: nexapay_user
+      POSTGRES_PASSWORD: nexapay_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - nexapay_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nexapay_user -d nexapay_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  nexapay_pgdata:
