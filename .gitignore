@@ -1,0 +1,23 @@
+# Build & IDE Artifacts
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+.idea/
+*.iml
+.vscode/
+*.log
+.DS_Store
+Thumbs.db
+
+# Exclude Root Architecture & Specification Documents
+DPR.md
+02-ARCHITECTURE.md
+03-DOMAIN-MODEL.md
+04-DATABASE-DESIGN.md
+05-AI-DESIGN.md
+06-AI-TOOLS.md
+07-DATA-GENERATION.md
+08-API-SPECIFICATION.md
+/docs/
+create_backdated_commits.ps1
