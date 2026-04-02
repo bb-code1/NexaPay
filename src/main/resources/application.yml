@@ -1,0 +1,75 @@
+server:
+  port: 8080
+  shutdown: graceful
+
+spring:
+  application:
+    name: nexapay-platform
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/nexapay_db}
+    username: ${SPRING_DATASOURCE_USERNAME:nexapay_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:nexapay_password}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 300000
+      max-lifetime: 1800000
+      connection-timeout: 20000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          batch_size: 50
+          order_inserts: true
+          order_updates: true
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:mock-key}
+      chat:
+        options:
+          model: ${OPENAI_CHAT_MODEL:gpt-4o-mini}
+          temperature: 0.1
+    vectorstore:
+      pgvector:
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimensions: 1536
+        table-name: vector_store
+        schema-name: public
+        initialize-schema: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+nexapay:
+  ai:
+    model-provider: ${NEXAPAY_AI_PROVIDER:openai} # openai, gemini, ollama
+    benchmark-enabled: true
+    confidence-threshold: 0.80
+  security:
+    jwt-secret: ${JWT_SECRET:dGhpcy1pcy1hLXNlY3VyZS01MTItYml0LXNlY3JldC1rZXktZm9yLW5leGFwYXktand0LWF1dGhlbnRpY2F0aW9u}
+    token-validity-seconds: 86400
