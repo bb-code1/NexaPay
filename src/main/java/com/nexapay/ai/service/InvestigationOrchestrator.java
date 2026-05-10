@@ -171,13 +171,22 @@ public class InvestigationOrchestrator {
                 latency
         );
 
+        // Extract Authenticated Security Context Actor
+        String actorId = "SYSTEM_AI_INVESTIGATOR";
+        String actorRole = "OPERATIONS_ANALYST";
+        org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getName())) {
+            actorId = auth.getName();
+            actorRole = auth.getAuthorities().stream().findFirst().map(org.springframework.security.core.GrantedAuthority::getAuthority).orElse("ROLE_OPERATIONS_ANALYST");
+        }
+
         // Record Audit Event
         auditService.logEventAsync(
                 "AI_INVESTIGATION_COMPLETED",
                 entityType,
                 entityRef,
-                "SYSTEM_AI_INVESTIGATOR",
-                "OPERATIONS_ANALYST",
+                actorId,
+                actorRole,
                 String.format("{\"conclusion\":\"%s\",\"latencyMs\":%d,\"toolsCount\":%d}", conclusion, latency, toolsInvoked.size())
         );
 
