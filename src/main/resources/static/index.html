@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NexaPay - AI-Powered Autonomous Card & Payment Incident Operations Center">
+    <title>NexaPay | AI Operations & Incident Resolution Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="brand-container">
+            <div class="logo-badge">NP</div>
+            <div class="brand-info">
+                <h1>NexaPay Operations Console</h1>
+                <p class="subtitle">Autonomous AI Payment Diagnosis & Double-Entry Ledger System</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <div class="status-indicator">
+                <span class="pulse-dot"></span>
+                <span class="status-text">PostgreSQL 16 + pgvector • Spring Boot 3.3 • Spring AI</span>
+            </div>
+            <button id="btn-run-benchmark" class="btn btn-secondary">Run CI/CD AI Benchmark</button>
+            <button id="btn-seed-data" class="btn btn-primary">Seed Demo Scenarios</button>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        <!-- Left Panel: Incident Query & Predefined Scenarios -->
+        <section class="panel query-panel">
+            <div class="panel-header">
+                <h2>AI Incident Copilot</h2>
+                <span class="badge badge-accent">Interactive</span>
+            </div>
+            
+            <div class="quick-scenarios-container">
+                <label class="section-label">One-Click Test Scenarios</label>
+                <div class="scenario-buttons">
+                    <button class="scenario-btn" data-query="Why was transaction TXN-84721 declined?">
+                        <span class="sc-tag tag-decline">TXN-84721</span>
+                        <span class="sc-desc">Card Limit Breach</span>
+                    </button>
+                    <button class="scenario-btn" data-query="Why was transaction TXN-10928 rejected?">
+                        <span class="sc-tag tag-decline">TXN-10928</span>
+                        <span class="sc-desc">Expired Card Swipe</span>
+                    </button>
+                    <button class="scenario-btn" data-query="Investigate decline on card CARD-3391 for TXN-99120">
+                        <span class="sc-tag tag-decline">TXN-99120</span>
+                        <span class="sc-desc">Blocked Card Status</span>
+                    </button>
+                    <button class="scenario-btn" data-query="Why did payment PAY-3301 encounter delays?">
+                        <span class="sc-tag tag-payment">PAY-3301</span>
+                        <span class="sc-desc">Gateway Timeout Recovery</span>
+                    </button>
+                    <button class="scenario-btn" data-query="Is transaction TXN-90124 suspicious?">
+                        <span class="sc-tag tag-fraud">TXN-90124</span>
+                        <span class="sc-desc">Fraud Velocity Anomaly</span>
+                    </button>
+                    <button class="scenario-btn" data-query="Why hasn't payment PAY-9321 settled correctly?">
+                        <span class="sc-tag tag-settlement">PAY-9321</span>
+                        <span class="sc-desc">Settlement Mismatch</span>
+                    </button>
+                </div>
+            </div>
+
+            <form id="investigate-form" class="search-form">
+                <div class="input-group">
+                    <input type="text" id="query-input" placeholder="e.g. Why was transaction TXN-84721 declined?" required />
+                    <button type="submit" id="btn-submit-investigation" class="btn btn-primary">Investigate</button>
+                </div>
+            </form>
+
+            <div class="system-stats-card">
+                <h3>Architecture Guardrails</h3>
+                <ul class="spec-list">
+                    <li><span>Double-Entry Bookkeeping</span> <strong>$\sum Debits = \sum Credits$</strong></li>
+                    <li><span>PII / PAN Masking</span> <strong>AOP Aspect (PCI-DSS)</strong></li>
+                    <li><span>Semantic Search</span> <strong>PgVector Cosine Top-3</strong></li>
+                    <li><span>Modular Isolation</span> <strong>ArchUnit Enforced</strong></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Right Panel: Structured Investigation Output -->
+        <section class="panel results-panel">
+            <div class="panel-header">
+                <h2>Autonomous Investigation Report</h2>
+                <div id="investigation-status-badge" class="badge badge-neutral">Awaiting Query</div>
+            </div>
+
+            <div id="investigation-placeholder" class="empty-state">
+                <div class="empty-icon">🔍</div>
+                <h3>No Active Investigation</h3>
+                <p>Select a scenario on the left or type an incident query to execute multi-tool autonomous root cause analysis.</p>
+            </div>
+
+            <div id="investigation-results" class="results-content" style="display: none;">
+                <!-- Header Metrics -->
+                <div class="metrics-row">
+                    <div class="metric-card">
+                        <span class="metric-label">Target Entity</span>
+                        <span id="res-entity-ref" class="metric-value code-font">-</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Confidence Score</span>
+                        <span id="res-confidence" class="metric-value font-highlight">0%</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Conclusion</span>
+                        <span id="res-conclusion" class="metric-value status-badge">-</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Execution Latency</span>
+                        <span id="res-latency" class="metric-value">0 ms</span>
+                    </div>
+                </div>
+
+                <!-- Primary Finding -->
+                <div class="report-box primary-finding-box">
+                    <h3>Root Cause Diagnosis</h3>
+                    <p id="res-primary-reason">-</p>
+                </div>
+
+                <!-- Tools & Policy Citations -->
+                <div class="two-col-grid">
+                    <div class="report-box">
+                        <h3>Invoked Domain Tools</h3>
+                        <ul id="res-tools-list" class="tool-tag-list"></ul>
+                    </div>
+                    <div class="report-box">
+                        <h3>Cited Policy Clauses (RAG)</h3>
+                        <ul id="res-policies-list" class="policy-citation-list"></ul>
+                    </div>
+                </div>
+
+                <!-- Evidence Matrix -->
+                <div class="report-box">
+                    <h3>Corroborating Evidence Matrix</h3>
+                    <table class="evidence-table">
+                        <thead>
+                            <tr>
+                                <th>Domain Context</th>
+                                <th>Key Metric / Telemetry</th>
+                                <th>Observed Value</th>
+                                <th>Invariant Flag</th>
+                            </tr>
+                        </thead>
+                        <tbody id="res-evidence-body"></tbody>
+                    </table>
+                </div>
+
+                <!-- Recommended Operator Action -->
+                <div class="report-box action-box">
+                    <h3>Recommended Resolution Action</h3>
+                    <p id="res-recommended-action">-</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for Benchmark Results -->
+    <div id="benchmark-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Automated CI/CD AI Evaluation Benchmark</h2>
+                <button id="btn-close-modal" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="benchmark-summary-cards">
+                    <div class="b-card"><span class="b-label">Total Scenarios</span><span id="bm-total" class="b-val">-</span></div>
+                    <div class="b-card"><span class="b-label">Passed Ground Truth</span><span id="bm-passed" class="b-val font-success">-</span></div>
+                    <div class="b-card"><span class="b-label">Root Cause Accuracy</span><span id="bm-accuracy" class="b-val font-highlight">-</span></div>
+                    <div class="b-card"><span class="b-label">Evaluation Status</span><span id="bm-status" class="b-val">-</span></div>
+                </div>
+                <div class="benchmark-description">
+                    <p>Evaluates autonomous tool calling precision, structured output compliance, and strict factual ground-truth matching across Card, Payment, Fraud, and Settlement domains without hallucination.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
