@@ -41,6 +41,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                    String actorId = jwtService.extractActorId(token);
+                    if (actorId != null) {
+                        org.slf4j.MDC.put("actorId", actorId);
+                    }
                 }
             }
         }

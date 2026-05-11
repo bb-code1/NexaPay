@@ -14,6 +14,8 @@ import com.nexapay.transaction.entity.TransactionEntity;
 import com.nexapay.transaction.repository.AuthorizationRepository;
 import com.nexapay.transaction.repository.DeclineCodeRepository;
 import com.nexapay.transaction.repository.TransactionRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,7 @@ import java.util.UUID;
 @Service
 public class AuthorizationService {
 
+    private static final Logger log = LoggerFactory.getLogger(AuthorizationService.class);
     private final CardService cardService;
     private final MerchantRepository merchantRepository;
     private final TransactionRepository transactionRepository;
@@ -65,6 +68,8 @@ public class AuthorizationService {
             String ipAddress
     ) {
         String txnRef = "TXN-" + (10000 + (int)(Math.random() * 89999));
+        log.info("AUTH_REQUEST: Processing txnRef={} for cardId={} merchantId={} amount={} {}",
+                txnRef, cardId, merchantId, amount, currency);
 
         CardEntity card = cardService.getCardById(cardId)
                 .orElse(null);
@@ -72,6 +77,7 @@ public class AuthorizationService {
                 .orElse(null);
 
         if (card == null) {
+            log.warn("AUTH_DECLINE: txnRef={} cardId={} not found -> ISO 14", txnRef, cardId);
             return new AuthDecision(false, null, "14", "Invalid Card Identifier", txnRef);
         }
 

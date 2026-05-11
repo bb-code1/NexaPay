@@ -22,9 +22,11 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
+    private final com.nexapay.common.logging.MdcLoggingFilter mdcLoggingFilter;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, com.nexapay.common.logging.MdcLoggingFilter mdcLoggingFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
+        this.mdcLoggingFilter = mdcLoggingFilter;
     }
 
     @Bean
@@ -48,6 +50,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
+                .addFilterBefore(mdcLoggingFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

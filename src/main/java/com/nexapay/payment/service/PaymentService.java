@@ -12,6 +12,8 @@ import com.nexapay.payment.repository.PaymentAttemptRepository;
 import com.nexapay.payment.repository.PaymentRepository;
 import com.nexapay.transaction.entity.TransactionEntity;
 import com.nexapay.transaction.repository.TransactionRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,7 @@ import java.util.UUID;
 @Service
 public class PaymentService {
 
+    private static final Logger log = LoggerFactory.getLogger(PaymentService.class);
     private final PaymentRepository paymentRepository;
     private final PaymentAttemptRepository paymentAttemptRepository;
     private final TransactionRepository transactionRepository;
@@ -48,8 +51,13 @@ public class PaymentService {
         // 1. Idempotency Check
         Optional<PaymentEntity> existingPayment = paymentRepository.findByIdempotencyKey(idempotencyKey);
         if (existingPayment.isPresent()) {
+            log.info("IDEMPOTENT_HIT: Returning existing payment paymentRef={} for idempotencyKey={}",
+                    existingPayment.get().getPaymentRef(), idempotencyKey);
             return existingPayment.get();
         }
+
+        log.info("CAPTURE_REQUEST: Capturing payment for transactionRef={} amount={} idempotencyKey={}",
+                transactionRef, captureAmount, idempotencyKey);
 
         // 2. Fetch Transaction
         TransactionEntity transaction = transactionRepository.findByTransactionRef(transactionRef)

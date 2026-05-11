@@ -190,6 +190,9 @@ public class InvestigationOrchestrator {
                 String.format("{\"conclusion\":\"%s\",\"latencyMs\":%d,\"toolsCount\":%d}", conclusion, latency, toolsInvoked.size())
         );
 
+        log.info("AI_INVESTIGATION_DONE: id={} ref={} type={} conclusion={} confidence={} latencyMs={}",
+                investigationId, entityRef, entityType, conclusion, confidenceScore, latency);
+
         return report;
     }
 
