@@ -51,6 +51,13 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
+        <!-- Resilience4j Fault Tolerance & Circuit Breaking -->
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-spring-boot3</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+
         <!-- JWT Token Support -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

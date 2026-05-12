@@ -5,6 +5,9 @@ import com.nexapay.ai.model.dto.*;
 import com.nexapay.ai.rag.PolicyRagService;
 import com.nexapay.ai.tools.OperationsInvestigationTools;
 import com.nexapay.audit.service.AuditService;
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.document.Document;
@@ -38,6 +41,9 @@ public class InvestigationOrchestrator {
         this.auditService = auditService;
     }
 
+    @CircuitBreaker(name = "aiInvestigationService", fallbackMethod = "fallbackInvestigation")
+    @RateLimiter(name = "aiInvestigationLimiter")
+    @Bulkhead(name = "aiBulkhead")
     @Transactional(readOnly = true)
     public InvestigationReport investigate(String query) {
         long startTime = System.currentTimeMillis();
@@ -214,5 +220,27 @@ public class InvestigationOrchestrator {
         if (entityRef.startsWith("PAY-")) return "PAYMENT";
         if (entityRef.startsWith("CARD-")) return "CARD";
         return "GENERAL";
+    }
+
+    public InvestigationReport fallbackInvestigation(String query, Throwable t) {
+        String entityRef = extractEntityRef(query);
+        String entityType = determineEntityType(entityRef);
+        log.warn("RESILIENCE_FALLBACK: Circuit breaker / rate limiter triggered for entityRef={}, reason={}",
+                entityRef, t.getMessage());
+
+        return new InvestigationReport(
+                "inv-fallback-" + UUID.randomUUID().toString().substring(0, 8),
+                entityRef,
+                entityType,
+                InvestigationConclusion.INCONCLUSIVE,
+                "Autonomous Investigation service is operating in degraded mode due to circuit breaker protection (" + t.getClass().getSimpleName() + "). Please retry shortly or inspect operational telemetry directly.",
+                0.50,
+                List.of(new EvidenceItem("RESILIENCE", "Circuit State", "DEGRADED_FALLBACK", "CIRCUIT_OPEN")),
+                List.of(),
+                List.of(),
+                "Check system health and retry incident investigation",
+                true,
+                5
+        );
     }
 }

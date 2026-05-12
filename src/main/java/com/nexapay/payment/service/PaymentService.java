@@ -12,6 +12,8 @@ import com.nexapay.payment.repository.PaymentAttemptRepository;
 import com.nexapay.payment.repository.PaymentRepository;
 import com.nexapay.transaction.entity.TransactionEntity;
 import com.nexapay.transaction.repository.TransactionRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -46,6 +48,8 @@ public class PaymentService {
         this.ledgerService = ledgerService;
     }
 
+    @Retry(name = "paymentGatewayRetry")
+    @CircuitBreaker(name = "paymentGatewayService")
     @Transactional
     public PaymentEntity capturePayment(String transactionRef, String idempotencyKey, BigDecimal captureAmount) {
         // 1. Idempotency Check
