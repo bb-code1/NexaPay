@@ -2,6 +2,8 @@ package com.nexapay.payment.controller;
 
 import com.nexapay.payment.entity.PaymentEntity;
 import com.nexapay.payment.service.PaymentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -12,6 +14,7 @@ import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/v1/payments")
+@Tag(name = "Payment Lifecycle & Ledger", description = "Idempotent payment capture and double-entry ledger journal postings")
 public class PaymentController {
 
     private final PaymentService paymentService;
@@ -32,6 +35,7 @@ public class PaymentController {
             String status
     ) {}
 
+    @Operation(summary = "Capture Payment", description = "Captures an authorized transaction with Idempotency-Key deduplication and generates balanced double-entry ledger entries.")
     @PostMapping("/capture")
     public ResponseEntity<CaptureResponse> capture(
             @RequestHeader(value = "Idempotency-Key", defaultValue = "default-key") String idempotencyKey,

@@ -5,6 +5,8 @@ import com.nexapay.ai.service.InvestigationOrchestrator;
 import com.nexapay.generator.model.BenchmarkScenario;
 import com.nexapay.generator.registry.BenchmarkRegistry;
 import com.nexapay.generator.service.SyntheticDataGeneratorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/admin")
+@Tag(name = "Admin & CI/CD Benchmarks", description = "Database seeding with ground-truth financial scenarios and real-time AI accuracy benchmark execution")
 public class AdminSeedController {
 
     private final SyntheticDataGeneratorService generatorService;
@@ -29,6 +32,7 @@ public class AdminSeedController {
             String status
     ) {}
 
+    @Operation(summary = "Seed Benchmark Scenarios", description = "Populates customers, cards, accounts, ledger journals, and 20 ground-truth financial incidents.")
     @PostMapping("/seed")
     public ResponseEntity<SyntheticDataGeneratorService.SeedResult> seedDatabase() {
         SyntheticDataGeneratorService.SeedResult result = generatorService.seedBaselineAndScenarios();

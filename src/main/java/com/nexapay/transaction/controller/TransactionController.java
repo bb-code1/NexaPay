@@ -2,6 +2,8 @@ package com.nexapay.transaction.controller;
 
 import com.nexapay.authorization.service.AuthorizationService;
 import com.nexapay.common.enums.TransactionChannel;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -12,6 +14,7 @@ import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/v1/transactions")
+@Tag(name = "Transaction & Authorization", description = "High-frequency card authorization engine with pessimistic balance holds and ISO-8583 decline rules")
 public class TransactionController {
 
     private final AuthorizationService authorizationService;
@@ -32,6 +35,7 @@ public class TransactionController {
             String ipAddress
     ) {}
 
+    @Operation(summary = "Authorize Card Transaction", description = "Executes pessimistic balance lock, expiry checks, and deterministic ISO-8583 decline code evaluation.")
     @PostMapping("/authorize")
     public ResponseEntity<AuthorizationService.AuthDecision> authorize(
             @RequestHeader(value = "Idempotency-Key", required = false) String idempotencyKey,

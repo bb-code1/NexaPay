@@ -2,6 +2,8 @@ package com.nexapay.auth.controller;
 
 import com.nexapay.common.security.JwtService;
 import com.nexapay.common.security.UserRole;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@Tag(name = "Authentication & RBAC", description = "Stateless JWT token issuance, session verification, and 1-click FinTech demo role switching")
 public class AuthController {
 
     private final JwtService jwtService;
@@ -35,6 +38,7 @@ public class AuthController {
             String actorId
     ) {}
 
+    @Operation(summary = "Authenticate & Obtain JWT Token", description = "Generates signed HMAC SHA-256 Bearer token with embedded role claims for authorization.")
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         UserRole role = determineRole(request.roleHint(), request.username());

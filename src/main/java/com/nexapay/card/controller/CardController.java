@@ -4,6 +4,8 @@ import com.nexapay.card.entity.CardAccountEntity;
 import com.nexapay.card.entity.CardEntity;
 import com.nexapay.card.service.CardService;
 import com.nexapay.common.enums.CardStatus;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +13,7 @@ import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/v1/cards")
+@Tag(name = "Card Management", description = "Card lifecycle status management, limits, and balance hold inspection")
 public class CardController {
 
     private final CardService cardService;
@@ -36,6 +39,7 @@ public class CardController {
             String notes
     ) {}
 
+    @Operation(summary = "Get Card & Account Balances", description = "Fetches card metadata, masked PAN, credit line, available limit, and active hold amounts.")
     @GetMapping("/{id}")
     public ResponseEntity<CardDetailsResponse> getCard(@PathVariable String id) {
         CardEntity card = cardService.getCardById(id)

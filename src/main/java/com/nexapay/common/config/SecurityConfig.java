@@ -36,13 +36,16 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints
+                        // Public endpoints & documentation
                         .requestMatchers(
                                 "/",
                                 "/index.html",
                                 "/app.css",
                                 "/app.js",
                                 "/favicon.ico",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
                                 "/api/v1/auth/**",
                                 "/actuator/**",
                                 "/api/v1/admin/**",
