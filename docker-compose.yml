@@ -18,6 +18,31 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - nexapay-network
+
+  nexapay-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nexapay_platform
+    restart: on-failure
+    depends_on:
+      nexapay-postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://nexapay-postgres:5432/nexapay_db
+      SPRING_DATASOURCE_USERNAME: nexapay_user
+      SPRING_DATASOURCE_PASSWORD: nexapay_password
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-mock-key}
+    ports:
+      - "8080:8080"
+    networks:
+      - nexapay-network
+
+networks:
+  nexapay-network:
+    driver: bridge
 
 volumes:
   nexapay_pgdata:
