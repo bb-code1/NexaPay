@@ -1,54 +1,54 @@
-name: NexaPay CI/CD Pipeline
+# name: NexaPay CI/CD Pipeline
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
 
-jobs:
-  build-and-test:
-    name: Build & AI Benchmark Evaluation
-    runs-on: ubuntu-latest
+# jobs:
+#   build-and-test:
+#     name: Build & AI Benchmark Evaluation
+#     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: pgvector/pgvector:pg16
-        env:
-          POSTGRES_DB: nexapay_db
-          POSTGRES_USER: nexapay_user
-          POSTGRES_PASSWORD: nexapay_password
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U nexapay_user -d nexapay_db"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 5
+#     services:
+#       postgres:
+#         image: pgvector/pgvector:pg16
+#         env:
+#           POSTGRES_DB: nexapay_db
+#           POSTGRES_USER: nexapay_user
+#           POSTGRES_PASSWORD: nexapay_password
+#         ports:
+#           - 5432:5432
+#         options: >-
+#           --health-cmd "pg_isready -U nexapay_user -d nexapay_db"
+#           --health-interval 5s
+#           --health-timeout 5s
+#           --health-retries 5
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
+#       - name: Set up JDK 17
+#         uses: actions/setup-java@v4
+#         with:
+#           java-version: '17'
+#           distribution: 'temurin'
+#           cache: maven
 
-      - name: Run Maven Tests & AI Evaluation Benchmark
-        run: ./mvnw clean verify
-        env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/nexapay_db
-          SPRING_DATASOURCE_USERNAME: nexapay_user
-          SPRING_DATASOURCE_PASSWORD: nexapay_password
-          GEMINI_API_KEY: mock-key
-          OPENAI_API_KEY: mock-key
+#       - name: Run Maven Tests & AI Evaluation Benchmark
+#         run: ./mvnw clean verify
+#         env:
+#           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/nexapay_db
+#           SPRING_DATASOURCE_USERNAME: nexapay_user
+#           SPRING_DATASOURCE_PASSWORD: nexapay_password
+#           GEMINI_API_KEY: mock-key
+#           OPENAI_API_KEY: mock-key
 
-      - name: Publish Test Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: surefire-test-reports
-          path: target/surefire-reports/
+#       - name: Publish Test Results
+#         if: always()
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: surefire-test-reports
+#           path: target/surefire-reports/
