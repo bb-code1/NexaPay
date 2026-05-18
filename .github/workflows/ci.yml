@@ -43,6 +43,7 @@ jobs:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/nexapay_db
           SPRING_DATASOURCE_USERNAME: nexapay_user
           SPRING_DATASOURCE_PASSWORD: nexapay_password
+          GEMINI_API_KEY: mock-key
           OPENAI_API_KEY: mock-key
 
       - name: Publish Test Results

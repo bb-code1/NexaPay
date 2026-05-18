@@ -34,6 +34,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://nexapay-postgres:5432/nexapay_db
       SPRING_DATASOURCE_USERNAME: nexapay_user
       SPRING_DATASOURCE_PASSWORD: nexapay_password
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-mock-key}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-mock-key}
     ports:
       - "8080:8080"
