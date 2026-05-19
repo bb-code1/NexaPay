@@ -21,3 +21,7 @@ DPR.md
 08-API-SPECIFICATION.md
 /docs/
 create_backdated_commits.ps1
+create_frontend_commits.ps1
+node_modules/
+dist/
+.vite/
