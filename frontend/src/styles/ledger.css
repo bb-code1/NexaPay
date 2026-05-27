@@ -1,0 +1,46 @@
+/* Ledger Layout */
+.ledger-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.t-account-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+
+.t-column-header {
+  font-size: 13px;
+  font-weight: 600;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+}
+
+.t-column-debit {
+  color: var(--status-danger);
+}
+
+.t-column-credit {
+  color: var(--status-success);
+}
+
+.balanced-equation-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background-color: var(--status-success-bg);
+  border: 1px solid var(--status-success-border);
+  border-radius: var(--radius-md);
+  color: var(--status-success);
+  font-size: 13px;
+  font-weight: 600;
+}
