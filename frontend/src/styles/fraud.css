@@ -1,0 +1,61 @@
+/* Fraud Layout */
+.fraud-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .fraud-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.risk-gauge-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.risk-score-number {
+  font-size: 48px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  line-height: 1;
+  margin: 12px 0 4px;
+}
+
+.risk-score-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Benchmark Layout */
+.benchmark-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.benchmark-stat-card {
+  padding: 16px 20px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.benchmark-stat-val {
+  font-size: 28px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
