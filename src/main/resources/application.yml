@@ -6,10 +6,14 @@ spring:
   application:
     name: nexapay-platform
 
+  autoconfigure:
+    exclude:
+      - org.springframework.ai.autoconfigure.vectorstore.pgvector.PgVectorStoreAutoConfiguration
+
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/nexapay_db}
-    username: ${SPRING_DATASOURCE_USERNAME:nexapay_user}
-    password: ${SPRING_DATASOURCE_PASSWORD:nexapay_password}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:1234}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
@@ -51,7 +55,7 @@ spring:
         dimensions: 1536
         table-name: vector_store
         schema-name: public
-        initialize-schema: true
+        initialize-schema: false
 
 management:
   endpoints:

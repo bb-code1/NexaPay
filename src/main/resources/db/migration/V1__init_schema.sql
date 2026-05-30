@@ -2,7 +2,12 @@
 -- 0. EXTENSIONS
 -- ============================================================================
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION IF NOT EXISTS "vector";
+DO $$
+BEGIN
+    CREATE EXTENSION IF NOT EXISTS "vector";
+EXCEPTION WHEN OTHERS THEN
+    RAISE NOTICE 'pgvector extension is not available on this PostgreSQL instance, continuing...';
+END $$;
 
 -- ============================================================================
 -- 1. CUSTOMER DOMAIN
@@ -234,14 +239,24 @@ CREATE TABLE audit_events (
 );
 
 -- ============================================================================
--- 9. SPRING AI PGVECTOR STORE TABLE
+-- 9. SPRING AI PGVECTOR STORE TABLE (if pgvector is available)
 -- ============================================================================
-CREATE TABLE IF NOT EXISTS vector_store (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    content TEXT NOT NULL,
-    metadata JSONB,
-    embedding vector(1536)
-);
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'vector') THEN
+        CREATE TABLE IF NOT EXISTS vector_store (
+            id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+            content TEXT NOT NULL,
+            metadata JSONB,
+            embedding vector(1536)
+        );
+        CREATE INDEX IF NOT EXISTS idx_vector_store_hnsw ON vector_store 
+        USING hnsw (embedding vector_cosine_ops)
+        WITH (m = 16, ef_construction = 64);
+    END IF;
+EXCEPTION WHEN OTHERS THEN
+    RAISE NOTICE 'Skipping vector_store table creation: %', SQLERRM;
+END $$;
 
 -- ============================================================================
 -- 10. INDEXES
@@ -261,7 +276,3 @@ CREATE INDEX idx_fraud_signals_txn ON fraud_signals(transaction_id);
 CREATE INDEX idx_fraud_cases_card ON fraud_cases(card_id, status);
 
 CREATE INDEX idx_audit_entity_time ON audit_events(entity_type, entity_id, timestamp DESC);
-
-CREATE INDEX IF NOT EXISTS idx_vector_store_hnsw ON vector_store 
-USING hnsw (embedding vector_cosine_ops)
-WITH (m = 16, ef_construction = 64);
